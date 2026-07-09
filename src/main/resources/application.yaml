@@ -12,8 +12,8 @@ spring:
 
     security:
         user:
-            name: aaris
-            password: aarisPassword
+            name: ${name}
+            password: ${password}
 
         
 
@@ -21,6 +21,6 @@ spring:
 
 
 app:
-    secret: W8d7F3gH2jK9pL1mR5sT8uV0xY4zA6bC
+    secret: ${SECRETS}
     expiration: 7
 
