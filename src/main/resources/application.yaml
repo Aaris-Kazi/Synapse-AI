@@ -1,0 +1,26 @@
+server:
+  address: 0.0.0.0
+  port: 8080
+
+spring:
+    profiles:
+        active: dev
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+
+    security:
+        user:
+            name: aaris
+            password: aarisPassword
+
+        
+
+
+
+
+app:
+    secret: W8d7F3gH2jK9pL1mR5sT8uV0xY4zA6bC
+    expiration: 7
+
