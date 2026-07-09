@@ -4,7 +4,7 @@ server:
 
 spring:
     profiles:
-        active: dev
+        active: ${SPRING_PROFILES_ACTIVE:dev}
     jpa:
         hibernate:
             ddl-auto: update
@@ -15,10 +15,13 @@ spring:
             name: ${name}
             password: ${password}
 
-        
-
-
-
+        oauth2:
+            client:
+                registration:
+                    google:
+                        client-id: ${CLIENT_ID}
+                        client-secret: ${CLIENT_SECRET}
+                        scope: profile, email
 
 app:
     secret: ${SECRETS}
