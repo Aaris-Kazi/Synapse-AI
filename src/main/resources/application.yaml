@@ -12,8 +12,8 @@ spring:
 
     security:
         user:
-            name: ${name}
-            password: ${password}
+            name: ${name:aaris}
+            password: ${password:aarisPassword}
 
         oauth2:
             client:
@@ -24,6 +24,6 @@ spring:
                         scope: profile, email
 
 app:
-    secret: ${SECRETS}
+    secret: ${SECRETS:mysecret}
     expiration: 7
 
