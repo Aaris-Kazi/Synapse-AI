@@ -31,6 +31,9 @@ public class Users {
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    private String googleId;
+    private String picture;
     
     @Column(nullable = false)
     private String password;

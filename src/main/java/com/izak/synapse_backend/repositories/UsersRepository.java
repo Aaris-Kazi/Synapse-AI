@@ -24,4 +24,8 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     @Query("insert into Users (firstName, lastName, username, email, password) values (:firstName, :lastName, :username, :email, :password)")
     void saveUser(@Param("firstName") String firstName, @Param("lastName") String lastName, @Param("username") String username, @Param("email") String email, @Param("password") String password);
+
+
+    @Query("SELECT u FROM Users u WHERE u.email = :email")
+    Optional<Users> findByEmail(@Param("email") String email);
 }
