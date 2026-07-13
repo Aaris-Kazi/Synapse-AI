@@ -7,3 +7,8 @@ This is a build a project for a backend to handle google oauth and chat with Cha
 - ChatGPT
 - Ollama
 - Google Oauth
+
+## Commands to run
+
+### For linux
+    export $(cat .env | xargs) && mvn clean install
