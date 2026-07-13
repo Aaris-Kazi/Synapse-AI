@@ -12,7 +12,7 @@ import jakarta.annotation.PostConstruct;
 
 @Service
 public class OpenAPIService {
-    @Value("${app.openai.api-key:}")
+    @Value("${app.openai.api-key}")
     private String apiKey;
 
     @Value("${app.openai.model:gpt-4o-mini}")
