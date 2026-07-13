@@ -22,12 +22,17 @@ spring:
                         client-id: ${CLIENT_ID}
                         client-secret: ${CLIENT_SECRET}
                         scope: profile, email
-
+ 
 app:
-    secret: ${SECRETS:W8d7F3gH2jK9pL1mR5sT8uV0xY4zA6bC}
+    secret: ${SECRETS}
     expiration: 7
     llm: "ollama"
     openai:
         api-key: ${OPENAPI_SECRET}
         model: gpt-4.1-mini
+    ollama:
+        type: local
+        base-url: https://ollama.com
+        api-key: ${OLLAMA_KEYS}
+        model: ${OLLAMA_MODEL:gpt-oss:120b}
 
