@@ -11,7 +11,7 @@ This is a build a project for a backend to handle google oauth and chat with Cha
 ## Commands to run
 
 ### For linux
-    export $(cat .env | xargs) && mvn clean install
+    export $(cat /home/warhero/.env | xargs) && mvn clean install
 
 ### For windows powershell command
     Get-Content .env | % { $k,$v=$_.split('='); Set-Item env:$k $v }; mvn clean install
