@@ -6,6 +6,7 @@ pipeline {
         CONTAINER_NAME = "synapse-ai"
         PORT = "8080"
         IMAGE_TAG = "v${BUILD_NUMBER}"
+        MACHINE_IP="192.168.0.114"
     }
 
     stages {
