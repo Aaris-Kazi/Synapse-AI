@@ -1,8 +1,8 @@
 spring:
     datasource:
-        url: jdbc:mysql://localhost:3306/synapseai
-        username: root
-        password: 12345
+        url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/synapseai}
+        username: ${SPRING_DATASOURCE_USERNAME:aaris}
+        password: ${SPRING_DATASOURCE_PASSWORD:12345}
         driver-class-name: com.mysql.cj.jdbc.Driver
 
     security:
@@ -19,7 +19,7 @@ spring:
 
 app:
     secret: ${SECRETS:something}
-    expiration: 7
+    expiration: 24
     llm: "ollama"
     openai:
         api-key: ${OPENAPI_SECRET:something}
@@ -30,3 +30,4 @@ app:
         local-url: http://192.168.0.114:11434
         api-key: ${OLLAMA_KEYS:something}
         model: ${OLLAMA_MODEL:gpt-oss:120b}
+
