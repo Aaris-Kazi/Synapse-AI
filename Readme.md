@@ -15,3 +15,32 @@ This is a build a project for a backend to handle google oauth and chat with Cha
 
 ### For windows powershell command
     Get-Content .env | % { $k,$v=$_.split('='); Set-Item env:$k $v }; mvn clean install
+
+### Architecture
+
+```
+                  User
+                    │
+                    ▼
+              Spring Boot
+                    │
+     ┌──────────────┼──────────────┐
+     │              │              │
+     ▼              ▼              ▼
+  Redis         MongoDB      User Profile
+(Current)      (History)     (Preferences)
+     │              │              │
+     └──────┬───────┴───────┬──────┘
+            ▼
+     Prompt Builder
+            │
+            ▼
+        LLM (Ollama/OpenAI)
+            │
+            ▼
+         AI Response
+            │
+     ┌──────┴────────┐
+     ▼               ▼
+Update Mongo     Update Redis Summary
+```
