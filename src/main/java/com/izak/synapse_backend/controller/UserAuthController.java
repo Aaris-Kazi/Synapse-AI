@@ -55,10 +55,11 @@ public class UserAuthController {
         int statusCode = 200;
 
         try {
-            userService.registeringUser(requestDTO);
+            String token = userService.registeringUser(requestDTO);
 
             messageResponse.put("status", "pass");
             messageResponse.put("message", "User registered successfully");
+            messageResponse.put("access-token", token);
         } catch (Exception e) {
             messageResponse.put("status", "failure");
             messageResponse.put("message", "Internal server error");

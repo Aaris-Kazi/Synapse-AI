@@ -23,7 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
 
-    public void registeringUser(RegisterDTO registerDTO) {
+    public String registeringUser(RegisterDTO registerDTO) {
 
         try {
             String encodedPassword = passwordEncoder.encode(registerDTO.getPassword());
@@ -36,6 +36,7 @@ public class UserService {
                             .password(encodedPassword)
                             .build();
             usersRepository.save(users);
+            return jwtService.generateToken(registerDTO.getUsername());
 
         }  catch (Exception e) {
             log.error("Error during user registration: {}", e.getMessage());
