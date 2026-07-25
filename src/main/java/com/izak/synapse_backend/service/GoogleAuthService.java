@@ -2,6 +2,7 @@ package com.izak.synapse_backend.service;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class GoogleAuthService {
+    private static String CHARS =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
     
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
@@ -31,6 +34,15 @@ public class GoogleAuthService {
 
     private final UsersRepository repository;
     private final JWTService jwtService;
+    private final SecureRandom RANDOM = new SecureRandom();
+
+    public String generate(int length) {
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(CHARS.charAt(RANDOM.nextInt(CHARS.length())));
+        }
+        return sb.toString();
+    }
 
     public String authenticateWithGoogle(GoogleAuthRequest googleAuthRequest) throws GeneralSecurityException, IOException {
         // Implement the logic to authenticate with Google using the provided token
@@ -55,8 +67,11 @@ public class GoogleAuthService {
         String googleId = tokenPayload.getSubject();
         String email = tokenPayload.get("email").toString();
 
+        String name = tokenPayload.get("name").toString();
         String firstName = tokenPayload.get("given_name").toString();
+        String lastName = tokenPayload.get("family_name").toString();
         String picture = tokenPayload.get("picture").toString();
+        String password = generate(18);
 
         Users user = repository.findByEmail(email)
                 .orElseGet(() -> {
@@ -64,8 +79,10 @@ public class GoogleAuthService {
                     newUser.setGoogleId(googleId);
                     newUser.setEmail(email);
                     newUser.setFirstName(firstName);
-                    newUser.setUsername(email);
+                    newUser.setLastName(lastName);
+                    newUser.setUsername(name);
                     newUser.setPicture(picture);
+                    newUser.setPassword(password);
                     return repository.save(newUser);
                 });
 
