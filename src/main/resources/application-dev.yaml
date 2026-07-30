@@ -17,8 +17,13 @@ spring:
                         client-id: ${CLIENT_ID:something}
                         client-secret: ${CLIENT_SECRET:something}
 
+    mongodb:
+        host: ${MONGO_HOST:192.168.0.105} 
+        password: ${MONGO_PASSWORD:yourStrongPassword}
+        username:  ${MONGO_USER:synapseAppUser}
+
 app:
-    secret: ${SECRETS:something}
+    secret: ${SECRETS:sometrweghwgwnwkngneksdjv394934AKDKADhing}
     expiration: 7
     llm: "ollama"
     openai:
