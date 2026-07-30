@@ -46,7 +46,11 @@ public class ChatController {
     }
 
     @GetMapping("/userDetails")
-    public String getMethodName(HttpServletRequest request) {
+    public ResponseEntity<Object> getMethodName(HttpServletRequest request) {
+
+        Map<String, String> messageResponse = new HashMap<>();
+        int statusCode = 400;
+        String resp = "";
 
         String token = request
             .getHeader(AppConstants.AUTHORIZATION)
@@ -54,16 +58,23 @@ public class ChatController {
 
         String username = jwtService.extractUsername(token);
         Optional<Users> user = usersRepository.findByUsername(username);
+        
         user.ifPresentOrElse(res -> {
             System.out.println(res.getUsername());
         }, () -> {
             System.out.println();
 
         });
+        
         if (user.isPresent()) {
-            return username;
+            resp = username;
+            statusCode = 200;
         }
-        return null;
+
+        messageResponse.put("usernmae", username);
+        
+
+        return ResponseEntity.status(statusCode).body(messageResponse);
     }
 
     @PostMapping("/chat")
