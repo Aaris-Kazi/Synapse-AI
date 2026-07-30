@@ -59,15 +59,9 @@ public class ChatController {
         String username = jwtService.extractUsername(token);
         Optional<Users> user = usersRepository.findByUsername(username);
         
-        user.ifPresentOrElse(res -> {
-            System.out.println(res.getUsername());
-        }, () -> {
-            System.out.println();
-
-        });
         
         if (user.isPresent()) {
-            resp = username;
+            resp = user.get().getUsername();
             statusCode = 200;
         }
 
