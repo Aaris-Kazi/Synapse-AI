@@ -4,7 +4,6 @@ spring:
         username: ${SPRING_DATASOURCE_USERNAME:aaris}
         password: ${SPRING_DATASOURCE_PASSWORD:12345}
         driver-class-name: com.mysql.cj.jdbc.Driver
-
     security:
         user:
             name: ${name:aaris}
@@ -16,6 +15,10 @@ spring:
                     google:
                         client-id: ${CLIENT_ID:something}
                         client-secret: ${CLIENT_SECRET:something}
+    mongodb:
+        host: ${MONGO_HOST:192.168.0.105} 
+        password: ${MONGO_PASSWORD:yourStrongPassword}
+        username:  ${MONGO_USER:synapseAppUser}
 
 app:
     secret: ${SECRETS:something}
