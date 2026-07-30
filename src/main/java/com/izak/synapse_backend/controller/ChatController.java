@@ -65,7 +65,7 @@ public class ChatController {
             statusCode = 200;
         }
 
-        messageResponse.put("usernmae", resp);
+        messageResponse.put("username", resp);
         
 
         return ResponseEntity.status(statusCode).body(messageResponse);
