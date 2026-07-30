@@ -88,6 +88,4 @@ public class UserAuthController {
 
         return ResponseEntity.status(statusCode).body(messageResponse);
     }
-    
-
 }

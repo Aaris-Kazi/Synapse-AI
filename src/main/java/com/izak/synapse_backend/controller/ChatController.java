@@ -2,6 +2,7 @@ package com.izak.synapse_backend.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.izak.synapse_backend.DTO.ChatDTO;
+import com.izak.synapse_backend.constants.AppConstants;
+import com.izak.synapse_backend.entities.Users;
+import com.izak.synapse_backend.repositories.UsersRepository;
+import com.izak.synapse_backend.security.JWTService;
 import com.izak.synapse_backend.service.OllamaService;
 import com.izak.synapse_backend.service.OpenAPIService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +33,8 @@ public class ChatController {
 
     private final OpenAPIService openAPIService;
     private final OllamaService ollamaService;
+    private final JWTService jwtService;
+    private final UsersRepository usersRepository;
 
     @Value("${app.llm}")
     private String llm;
@@ -35,6 +43,27 @@ public class ChatController {
     @GetMapping("/chat")
     public String getChat() {
         return llm;
+    }
+
+    @GetMapping("/userDetails")
+    public String getMethodName(HttpServletRequest request) {
+
+        String token = request
+            .getHeader(AppConstants.AUTHORIZATION)
+            .substring(AppConstants.SUBSTRING);
+
+        String username = jwtService.extractUsername(token);
+        Optional<Users> user = usersRepository.findByUsername(username);
+        user.ifPresentOrElse(res -> {
+            System.out.println(res.getUsername());
+        }, () -> {
+            System.out.println();
+
+        });
+        if (user.isPresent()) {
+            return username;
+        }
+        return null;
     }
 
     @PostMapping("/chat")
