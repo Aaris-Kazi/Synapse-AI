@@ -83,7 +83,7 @@ public class ChatController {
             Optional<Users> user = usersRepository.findByUsername(username);
             
             messageResponse.put("message", "Chat endpoint");
-            messageResponse.put("response", chatService.chat(chatDTO, user.get()));
+            messageResponse.putAll(chatService.chat(chatDTO, user.get()));
             
         } catch (Exception e) {
             log.error("Error during chat processing: {}", e.getMessage());

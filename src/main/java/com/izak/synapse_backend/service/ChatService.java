@@ -1,6 +1,8 @@
 package com.izak.synapse_backend.service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class ChatService {
                 .build();
     }
 
-    public String chat(ChatDTO chatDTO, Users user) {
+    public Map<String, String> chat(ChatDTO chatDTO, Users user) {
 
         String response = llm.equals("ollama") ? ollamaService.sendMessage(chatDTO.getMessage())
                 : openAPIService.sendMessage(chatDTO.getMessage());
@@ -43,8 +45,8 @@ public class ChatService {
         ChatModel chatModel = chatRepository
                 .findByConversationID(chatDTO.getMessageID())
                 .orElseGet(() -> {
-                    String responseTitle = llm.equals("ollama") ? ollamaService.sendMessage("Please make 3 words title for this conversation " + response)
-                            : openAPIService.sendMessage("Please make 3 words title for this conversation " + response);
+                    String responseTitle = llm.equals("ollama") ? ollamaService.sendMessage("Please make 3 words title for this conversation " + chatDTO.getMessage())
+                            : openAPIService.sendMessage("Please make 3 words title for this conversation " + chatDTO.getMessage());
                     ChatModel newChatModel = ChatModel
                             .builder()
                             .conversationID(chatDTO.getMessageID())
@@ -67,7 +69,11 @@ public class ChatService {
 
         chatRepository.save(chatModel);
 
-        return response;
+        return new HashMap<String, String>() {{
+            put("response", response);
+            put("conversationID", chatModel.getConversationID());
+            put("title", chatModel.getTitle());
+        }};
     }
 
 }
