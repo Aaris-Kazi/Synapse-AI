@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import com.izak.synapse_backend.DTO.MessageModel;
+import com.izak.synapse_backend.constants.AppConstants;
+
 import jakarta.annotation.PostConstruct;
 
 @Service
@@ -34,11 +37,15 @@ public class OllamaService {
     public String sendMessage(String message) {
         // Implement the logic to send a message to the Ollama API using the restClient
         // You can use the model and apiKey for any necessary API calls
+        MessageModel messageModel;
 
         String requestBody = String.format(
                 "{\"model\": \"%s\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}],\"stream\": false}", model, message);
 
-        System.out.println("Request Body: " + requestBody);
+        messageModel = new MessageModel();
+        messageModel.setRole(AppConstants.USER);
+        messageModel.setContent(message);
+
 
         Map<String, Object> response =  restClient.post()
                 .uri("/api/chat")

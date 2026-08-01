@@ -1,5 +1,7 @@
 package com.izak.synapse_backend.DTO;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -9,4 +11,6 @@ public class ChatDTO {
     @NotNull(message = "Message cannot be null")
     @NotBlank(message = "Message is required")
     String message;    
+
+    String messageID = UUID.randomUUID().toString();
 }

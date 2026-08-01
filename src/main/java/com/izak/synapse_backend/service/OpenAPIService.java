@@ -33,7 +33,6 @@ public class OpenAPIService {
     public String sendMessage(String message) {
         // Implement the logic to send a message to the OpenAI API using the restClient
         // You can use the model and apiKey for any necessary API calls
-
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", model);
         requestBody.put("messages", new Object[] { new HashMap<String, String>() {{
@@ -41,7 +40,6 @@ public class OpenAPIService {
             put("content", message);
         }} });
 
-        System.out.println("Request Body: " + apiKey + " "+ model + " " + requestBody);
 
         Map<String, Object> response = restClient.post()
                 .uri("/completions")

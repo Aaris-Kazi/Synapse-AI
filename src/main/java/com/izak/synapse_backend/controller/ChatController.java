@@ -17,8 +17,7 @@ import com.izak.synapse_backend.constants.AppConstants;
 import com.izak.synapse_backend.entities.Users;
 import com.izak.synapse_backend.repositories.UsersRepository;
 import com.izak.synapse_backend.security.JWTService;
-import com.izak.synapse_backend.service.OllamaService;
-import com.izak.synapse_backend.service.OpenAPIService;
+import com.izak.synapse_backend.service.ChatService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -31,10 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ChatController {
 
-    private final OpenAPIService openAPIService;
-    private final OllamaService ollamaService;
     private final JWTService jwtService;
     private final UsersRepository usersRepository;
+    private final ChatService chatService;
 
     @Value("${app.llm}")
     private String llm;
@@ -72,14 +70,20 @@ public class ChatController {
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<Object> postChat(@Valid @RequestBody ChatDTO chatDTO) {
+    public ResponseEntity<Object> postChat(@Valid @RequestBody ChatDTO chatDTO, HttpServletRequest request) {
         
         Map<String, String> messageResponse = new HashMap<>();
         int statusCode = 200;
         try {
-            System.out.println("Received message: " + chatDTO.getMessage());
+            String token = request
+                .getHeader(AppConstants.AUTHORIZATION)
+                .substring(AppConstants.SUBSTRING);
+
+            String username = jwtService.extractUsername(token);
+            Optional<Users> user = usersRepository.findByUsername(username);
+            
             messageResponse.put("message", "Chat endpoint");
-            messageResponse.put("response", llm.equals("ollama") ? ollamaService.sendMessage(chatDTO.getMessage()) : openAPIService.sendMessage(chatDTO.getMessage()));
+            messageResponse.put("response", chatService.chat(chatDTO, user.get()));
             
         } catch (Exception e) {
             log.error("Error during chat processing: {}", e.getMessage());
