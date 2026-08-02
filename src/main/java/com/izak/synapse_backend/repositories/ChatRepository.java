@@ -11,5 +11,6 @@ import java.util.List;
 public interface ChatRepository extends MongoRepository<ChatModel, String> {
 
     Optional<ChatModel>  findByConversationID(String conversationID);
+    Optional<ChatModel>  findByUserIdAndConversationID(Long userId, String conversationID);
     List<ChatModel> findByUserIdOrderByUpdatedAtDesc(Long userId);
 }

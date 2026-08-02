@@ -20,60 +20,83 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatService {
 
-    @Value("${app.llm}")
-    private String llm;
+        @Value("${app.llm}")
+        private String llm;
 
-    private final OpenAPIService openAPIService;
-    private final OllamaService ollamaService;
-    private final ChatRepository chatRepository;
+        private final OpenAPIService openAPIService;
+        private final OllamaService ollamaService;
+        private final ChatRepository chatRepository;
 
-    public MessageModel makeMessage(String role, String message) {
-        return MessageModel
-                .builder()
-                .role(role)
-                .content(message)
-                .build();
-    }
+        public MessageModel makeMessage(String role, String message) {
+                return MessageModel
+                                .builder()
+                                .role(role)
+                                .content(message)
+                                .build();
+        }
 
-    public Map<String, String> chat(ChatDTO chatDTO, Users user) {
+        public Map<String, String> chat(ChatDTO chatDTO, Users user) {
 
-        String response = llm.equals("ollama") ? ollamaService.sendMessage(chatDTO.getMessage())
-                : openAPIService.sendMessage(chatDTO.getMessage());
+                String response = llm.equals("ollama") ? ollamaService.sendMessage(chatDTO.getMessage())
+                                : openAPIService.sendMessage(chatDTO.getMessage());
 
-        
+                ChatModel chatModel = chatRepository
+                                .findByConversationID(chatDTO.getMessageID())
+                                .orElseGet(() -> {
+                                        String responseTitle = llm.equals("ollama") ? ollamaService
+                                                        .sendMessage("Please make 3 words title for this conversation "
+                                                                        + chatDTO.getMessage())
+                                                        : openAPIService.sendMessage(
+                                                                        "Please make 3 words title for this conversation "
+                                                                                        + chatDTO.getMessage());
+                                        ChatModel newChatModel = ChatModel
+                                                        .builder()
+                                                        .conversationID(chatDTO.getMessageID())
+                                                        .userId(user.getId())
+                                                        .title(responseTitle)
+                                                        .createdAt(LocalDateTime.now())
+                                                        .build();
+                                        return chatRepository.save(newChatModel);
+                                });
 
-        ChatModel chatModel = chatRepository
-                .findByConversationID(chatDTO.getMessageID())
-                .orElseGet(() -> {
-                    String responseTitle = llm.equals("ollama") ? ollamaService.sendMessage("Please make 3 words title for this conversation " + chatDTO.getMessage())
-                            : openAPIService.sendMessage("Please make 3 words title for this conversation " + chatDTO.getMessage());
-                    ChatModel newChatModel = ChatModel
-                            .builder()
-                            .conversationID(chatDTO.getMessageID())
-                            .userId(user.getId())
-                            .title(responseTitle)
-                            .createdAt(LocalDateTime.now())
-                            .build();
-                    return chatRepository.save(newChatModel);
-                });
+                chatModel
+                                .getMessages()
+                                .add(makeMessage(AppConstants.USER, chatDTO.getMessage()));
 
-        chatModel
-                .getMessages()
-                .add(makeMessage(AppConstants.USER, chatDTO.getMessage()));
+                chatModel
+                                .getMessages()
+                                .add(makeMessage(AppConstants.AGENT, response));
 
-        chatModel
-                .getMessages()
-                .add(makeMessage(AppConstants.AGENT, response));
+                chatModel.setUpdatedAt(LocalDateTime.now());
 
-        chatModel.setUpdatedAt(LocalDateTime.now());
+                chatRepository.save(chatModel);
 
-        chatRepository.save(chatModel);
+                return new HashMap<String, String>() {
+                        {
+                                put("response", response);
+                                put("conversationID", chatModel.getConversationID());
+                                put("title", chatModel.getTitle());
+                        }
+                };
+        }
 
-        return new HashMap<String, String>() {{
-            put("response", response);
-            put("conversationID", chatModel.getConversationID());
-            put("title", chatModel.getTitle());
-        }};
-    }
+        public Map<String, Object> getChat(String messageID, Users user) {
+                // Implementation for retrieving chat
 
+                
+                ChatModel chatModel = chatRepository
+                                .findByUserIdAndConversationID(user.getId(), messageID)
+                                .orElseThrow(() -> {
+                                       throw new RuntimeException("Chat not found for messageID: " + messageID); 
+                                });
+
+
+                return new HashMap<String, Object>() {
+                        {
+                                put("conversationID", chatModel.getConversationID());
+                                put("title", chatModel.getTitle());
+                                put("messages", chatModel.getMessages());
+                        }
+                };
+        }
 }

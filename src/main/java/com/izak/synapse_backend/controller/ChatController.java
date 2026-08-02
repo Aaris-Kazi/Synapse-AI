@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.izak.synapse_backend.DTO.ChatDTO;
@@ -38,8 +39,8 @@ public class ChatController {
     private String llm;
     
 
-    @GetMapping("/chat")
-    public String getChat() {
+    @GetMapping("/model")
+    public String getModel() {
         return llm;
     }
 
@@ -92,6 +93,30 @@ public class ChatController {
         }
 
 
+        return ResponseEntity.status(statusCode).body(messageResponse);
+    }
+
+    
+    @GetMapping("/chat")
+    public ResponseEntity<Object> getChat(@RequestParam String messageID, HttpServletRequest request) {
+        Map<String, Object> messageResponse = new HashMap<>();
+        int statusCode = 200;
+        try {
+            String token = request
+                .getHeader(AppConstants.AUTHORIZATION)
+                .substring(AppConstants.SUBSTRING);
+
+            String username = jwtService.extractUsername(token);
+            Optional<Users> user = usersRepository.findByUsername(username);
+            
+            messageResponse.put("message", "Chat endpoint");
+            messageResponse.putAll(chatService.getChat(messageID, user.get()));
+            
+        } catch (Exception e) {
+            log.error("Error during chat processing: {}", e.getMessage());
+            statusCode = 500;
+            messageResponse.put("status", "failure");
+        }
         return ResponseEntity.status(statusCode).body(messageResponse);
     }
 }
