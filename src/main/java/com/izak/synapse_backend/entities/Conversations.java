@@ -15,9 +15,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +27,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Conversations {
 
     @Id
@@ -33,7 +35,7 @@ public class Conversations {
     private Long id;
 
 
-    @ManyToOne(
+    @OneToOne(
         targetEntity = Users.class, fetch = FetchType.LAZY
     )
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
@@ -41,5 +43,6 @@ public class Conversations {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
+    @Builder.Default
     private List<ConVoModels> conversations = new ArrayList<>();
 }
