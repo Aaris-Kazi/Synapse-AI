@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.izak.synapse_backend.DTO.MessageModel;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.izak.synapse_backend.DTO.MessageModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
