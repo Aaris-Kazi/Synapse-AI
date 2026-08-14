@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse-backend
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: synapse-backend
+
+  template:
+    metadata:
+      labels:
+        app: synapse-backend
+
+    spec:
+      containers:
+        - name: synapse-backend
+          image: synapse-backend:latest
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 8080
+
+          envFrom:
+            - configMapRef:
+                name: synapse-config
