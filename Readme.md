@@ -16,6 +16,9 @@ This is a build a project for a backend to handle google oauth and chat with Cha
 ### For windows powershell command
     Get-Content .env | % { $k,$v=$_.split('='); Set-Item env:$k $v }; mvn clean install
 
+### Kubernetes deployment
+    kubectl apply -f deployment.yml
+
 ### Architecture
 
 ```
