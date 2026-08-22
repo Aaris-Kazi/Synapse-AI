@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: synapse-backend
+  name: synapse-backend-service
 
 spec:
   replicas: 1
@@ -27,3 +27,15 @@ spec:
           envFrom:
             - configMapRef:
                 name: synapse-config
+
+spec:
+  selector:
+    app: synapse-ai
+
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8088
+      nodePort: 80888 
+
+  type: NodePort

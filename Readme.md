@@ -18,6 +18,11 @@ This is a build a project for a backend to handle google oauth and chat with Cha
 
 ### Kubernetes deployment
     kubectl apply -f deployment.yml
+    minikube image load aariskazi/synapse-backend:latest
+    kubectl rollout restart deployment synapse-backend
+    kubectl get svc
+    minikube service synapse-backend-service --url
+    kubectl get endpoints synapse-backend-service
 
 ### Architecture
 
