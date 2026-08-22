@@ -26,7 +26,7 @@ spec:
 
           envFrom:
             - configMapRef:
-                name: synapse-config
+                name: synapse
 
 ---
 apiVersion: v1
