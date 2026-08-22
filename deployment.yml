@@ -28,6 +28,13 @@ spec:
             - configMapRef:
                 name: synapse-config
 
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: synapse-ai-service
+
 spec:
   selector:
     app: synapse-ai
