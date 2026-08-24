@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: synapse-backend
-          image: synapse-ai:v18
+          image: aariskazi/synapse-ai
           imagePullPolicy: Never
 
           ports:
