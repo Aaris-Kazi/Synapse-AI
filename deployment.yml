@@ -37,7 +37,7 @@ metadata:
 
 spec:
   selector:
-    app: synapse-backend
+    app: synapse-ai
 
   ports:
     - protocol: TCP
