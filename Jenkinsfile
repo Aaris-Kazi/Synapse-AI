@@ -70,13 +70,13 @@ pipeline {
             }
         }
 
-        stage('Push to Docker Hub') {
-            steps {
-                sh '''
-                docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                '''
-            }
-        }
+        // stage('Push to Docker Hub') {
+        //     steps {
+        //         sh '''
+        //         docker push ${IMAGE_NAME}:${IMAGE_TAG}
+        //         '''
+        //     }
+        // }
 
         stage('Stop Old Container') {
             steps {
