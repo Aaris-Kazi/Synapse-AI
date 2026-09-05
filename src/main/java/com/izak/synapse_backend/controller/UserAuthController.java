@@ -35,9 +35,10 @@ public class UserAuthController {
         Map<String, String> messageResponse = new HashMap<>();
         int statusCode = 200;
         try {
-            String token = userService.loginUser(loginDTO);
+            Map<String, String> tokens = userService.loginUser(loginDTO);
             messageResponse.put("message", "User logged in successfully");
-            messageResponse.put("access-token", token);
+            messageResponse.put("access-token", tokens.get("accessToken"));
+            messageResponse.put("refresh-token", tokens.get("refreshToken"));
 
         } catch (Exception e) {
             statusCode = 401; // Unauthorized
@@ -55,11 +56,12 @@ public class UserAuthController {
         int statusCode = 200;
 
         try {
-            String token = userService.registeringUser(requestDTO);
+            Map<String, String> tokens = userService.registeringUser(requestDTO);
 
             messageResponse.put("status", "pass");
             messageResponse.put("message", "User registered successfully");
-            messageResponse.put("access-token", token);
+            messageResponse.put("access-token", tokens.get("accessToken"));
+            messageResponse.put("refresh-token", tokens.get("refreshToken"));
         } catch (Exception e) {
             messageResponse.put("status", "failure");
             messageResponse.put("message", "Internal server error");
@@ -77,8 +79,9 @@ public class UserAuthController {
 
         try {
             messageResponse.put("status", "pass");
-            String token = googleAuthService.authenticateWithGoogle(requestDTO);
-            messageResponse.put("access-token", token);
+            Map<String, String> tokens = googleAuthService.authenticateWithGoogle(requestDTO);
+            messageResponse.put("access-token", tokens.get("accessToken"));
+            messageResponse.put("refresh-token", tokens.get("refreshToken"));
         } catch (Exception e) {
             log.error("Error during Google login: {}", e.getMessage());
             messageResponse.put("status", "failure");

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Collections;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class GoogleAuthService {
         return sb.toString();
     }
 
-    public String authenticateWithGoogle(GoogleAuthRequest googleAuthRequest) throws GeneralSecurityException, IOException {
+    public Map<String, String> authenticateWithGoogle(GoogleAuthRequest googleAuthRequest) throws GeneralSecurityException, IOException {
         // Implement the logic to authenticate with Google using the provided token
         // You can use the clientId and clientSecret for any necessary API calls
         String token = googleAuthRequest.getToken();
@@ -86,6 +87,6 @@ public class GoogleAuthService {
                     return repository.save(newUser);
                 });
 
-        return jwtService.generateToken(user.getUsername());
+        return jwtService.generateAccessAndRefreshToken(user.getUsername());
     }
 }

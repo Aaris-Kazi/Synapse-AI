@@ -2,6 +2,8 @@ package com.izak.synapse_backend.security;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.SecretKey;
 
@@ -27,6 +29,15 @@ public class JWTService {
         return Keys.hmacShaKeyFor(appSecret.getBytes(StandardCharsets.UTF_8));
     }
 
+    public Map<String, String> generateAccessAndRefreshToken(String username) {
+        String accessToken = generateToken(username, "access");
+        String refreshToken = generateToken(username, "refresh");
+        return new HashMap<String, String>() {{
+            put("accessToken", accessToken);
+            put("refreshToken", refreshToken);
+        }};
+    }
+
     public String generateToken(String username) {
         long now = System.currentTimeMillis();
         long expirationTime = System.currentTimeMillis() + (appExpiration * 24 * 60 * 60) * 1000; // Convert days to milliseconds
@@ -34,6 +45,23 @@ public class JWTService {
         return Jwts.builder()
                 .subject(username)
                 .claim("role", "user")
+                .issuedAt(new java.util.Date(now))
+                .expiration(new java.util.Date(expirationTime))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    public String generateToken(String username, String type) {
+        long now = System.currentTimeMillis();
+        long expirationTime = System.currentTimeMillis() + (appExpiration * 24 * 60 * 60) * 1000; // Convert days to milliseconds
+        if (type.equals("refresh")) {
+            expirationTime = System.currentTimeMillis() + ((appExpiration + 7) * 24 * 60 * 60) * 1000; // Convert days to milliseconds
+        }
+
+        return Jwts.builder()
+                .subject(username)
+                .claim("role", "user")
+                .claim("type", type)
                 .issuedAt(new java.util.Date(now))
                 .expiration(new java.util.Date(expirationTime))
                 .signWith(getSigningKey())

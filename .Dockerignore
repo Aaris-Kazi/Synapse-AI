@@ -1,0 +1,8 @@
+./deployment.yml
+./Jenkinsfile
+./mvnwcmd
+./ReadMe.md
+./.gitignore
+./configmap.yml
+./mvnw
+./src/main/resources/application-dev.yaml

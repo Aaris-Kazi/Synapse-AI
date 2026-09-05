@@ -1,5 +1,6 @@
 package com.izak.synapse_backend.service;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +24,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
 
-    public String registeringUser(RegisterDTO registerDTO) {
+
+
+    public Map<String, String> registeringUser(RegisterDTO registerDTO) {
 
         try {
             String encodedPassword = passwordEncoder.encode(registerDTO.getPassword());
@@ -36,7 +39,7 @@ public class UserService {
                             .password(encodedPassword)
                             .build();
             usersRepository.save(users);
-            return jwtService.generateToken(registerDTO.getUsername());
+            return jwtService.generateAccessAndRefreshToken(registerDTO.getUsername());
 
         }  catch (Exception e) {
             log.error("Error during user registration: {}", e.getMessage());
@@ -45,10 +48,10 @@ public class UserService {
         
     }
 
-    public String loginUser(LoginDTO loginDTO) {
+    public Map<String, String> loginUser(LoginDTO loginDTO) {
         // Implement login logic here
-        String token;
-        
+        Map<String, String> token;
+
         try {
             String username = loginDTO.getUsername();
             String password = loginDTO.getPassword();
@@ -59,7 +62,7 @@ public class UserService {
             
             if (user.isPresent() && isMatch) {
                 // User found and passwords match, proceed with login
-                token = jwtService.generateToken(username);
+                token = jwtService.generateAccessAndRefreshToken(username);
                 log.info("User logged in: {}", user.get().getUsername());
             } else {
                 // User not found or invalid credentials
