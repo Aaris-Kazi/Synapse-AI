@@ -100,4 +100,17 @@ public class JWTService {
                 && !isTokenExpired;
 
     }
+
+    public Map<String, Object> isTokenValid(String token){
+
+        Claims claims = extractPayload(token);
+        String username = claims.getSubject();
+        boolean isTokenExpired = claims.getExpiration().before(new java.util.Date());
+
+        return new HashMap<String, Object>() {{
+            put("username", username);
+            put("isValid", !isTokenExpired);
+        }};
+
+    }
 }
