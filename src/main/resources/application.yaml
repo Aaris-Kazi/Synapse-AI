@@ -21,5 +21,16 @@ spring:
                 registration:
                     google:
                         scope: profile, email
- 
+
+management:
+    metrics:
+        tags:
+            application: synapse-ai  
+    endpoint:
+        health:
+            show-details: always
+    endpoints: 
+        web:
+            exposure:
+                include: health, info, prometheus
 

@@ -2,7 +2,6 @@ package com.izak.synapse_backend.security;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -53,7 +52,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> 
-                    requests.requestMatchers("/", "/login", "/register", "/logout", "/authenticate", "/health", "/css/**", "/js/**", "/api/auth/v1/**")
+                    requests.requestMatchers("/", "/login", "/register", "/logout", "/actuator/**", "/authenticate", "/health", "/css/**", "/js/**", "/api/auth/v1/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
